@@ -1,0 +1,94 @@
+{
+  "case": { "name": "Aluminum Motor Housing", "evaluation_date": "2026-08-08" },
+  "requirements": [
+    {
+      "key": "cnc_5axis",
+      "label": "CNC 5-axis",
+      "kind": "MANDATORY",
+      "value_type": "BOOLEAN",
+      "operator": "EQ",
+      "target_value": true
+    },
+    {
+      "key": "material_6061",
+      "label": "Aluminum 6061",
+      "kind": "MANDATORY",
+      "value_type": "BOOLEAN",
+      "operator": "EQ",
+      "target_value": true
+    },
+    {
+      "key": "iso_9001",
+      "label": "ISO 9001",
+      "kind": "MANDATORY",
+      "value_type": "BOOLEAN",
+      "operator": "EQ",
+      "target_value": true
+    },
+    {
+      "key": "capacity_monthly",
+      "label": "Monthly Capacity",
+      "kind": "MANDATORY",
+      "value_type": "NUMBER",
+      "operator": "GTE",
+      "target_value": 20000,
+      "unit": "unit"
+    },
+    {
+      "key": "lead_time_days",
+      "label": "Lead Time",
+      "kind": "MANDATORY",
+      "value_type": "NUMBER",
+      "operator": "LTE",
+      "target_value": 30,
+      "unit": "day"
+    },
+    {
+      "key": "moq",
+      "label": "MOQ",
+      "kind": "MANDATORY",
+      "value_type": "NUMBER",
+      "operator": "LTE",
+      "target_value": 20000,
+      "unit": "unit"
+    },
+    {
+      "key": "quality_score",
+      "label": "Quality Score",
+      "kind": "PREFERENCE",
+      "value_type": "NUMBER",
+      "weight": 0.4,
+      "direction": "HIGHER_IS_BETTER",
+      "unit": "percent"
+    },
+    {
+      "key": "delivery_reliability",
+      "label": "On-Time Delivery",
+      "kind": "PREFERENCE",
+      "value_type": "NUMBER",
+      "weight": 0.6,
+      "direction": "HIGHER_IS_BETTER",
+      "unit": "percent"
+    }
+  ],
+  "suppliers": [
+    {
+      "name": "Supplier A",
+      "external_ref": "SUP-A",
+      "country": "PK",
+      "expected_status": "PASS"
+    },
+    {
+      "name": "Supplier B",
+      "external_ref": "SUP-B",
+      "country": "CN",
+      "expected_status": "FAIL"
+    },
+    {
+      "name": "Supplier C",
+      "external_ref": "SUP-C",
+      "country": "DE",
+      "expected_status": "REVIEW"
+    }
+  ]
+}
