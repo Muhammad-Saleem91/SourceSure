@@ -1,0 +1,36 @@
+{
+  "suppliers": {
+    "Supplier A": {
+      "expected_eligibility_status": "PASS",
+      "expected_rank": 1,
+      "expected_extractions": {
+        "cnc_5axis": {"normalized_value": "true"},
+        "material_6061": {"normalized_value": "true"},
+        "iso_9001": {"normalized_value": "true"},
+        "capacity_monthly": {"normalized_value": "25000"},
+        "lead_time_days": {"normalized_value": "14"},
+        "moq": {"normalized_value": "500"},
+        "quality_score": {"normalized_value": "88"},
+        "delivery_reliability": {"normalized_value": "92"}
+      }
+    },
+    "Supplier B": {
+      "expected_eligibility_status": "FAIL",
+      "expected_rank": null,
+      "expected_extractions": {
+        "cnc_5axis": {"normalized_value": "true"},
+        "material_6061": {"normalized_value": "true"},
+        "iso_9001": {"normalized_value": "false"},
+        "capacity_monthly": {"normalized_value": "5000"}
+      }
+    },
+    "Supplier C": {
+      "expected_eligibility_status": "REVIEW",
+      "expected_rank": null,
+      "expected_extractions": {
+        "cnc_5axis": {"normalized_value": "true"},
+        "iso_9001": {"normalized_value": "true"}
+      }
+    }
+  }
+}

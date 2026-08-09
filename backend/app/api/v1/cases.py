@@ -14,6 +14,7 @@ from app.db.session import get_db
 from app.schemas.cases import CaseCreate, CaseResponse, CaseAnalysis
 from app.schemas.common import CaseStatus
 from app.repositories import case_repo, supplier_repo
+from app.services.reporting.case_analysis_service import get_case_analysis_read_model
 
 router = APIRouter(prefix="/cases", tags=["cases"])
 
@@ -45,24 +46,4 @@ def get_case_analysis(case_id: str, db: Session = Depends(get_db)):
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
         
-    suppliers = supplier_repo.get_for_case(db, case_id)
-    suppliers_data = []
-    for sup in suppliers:
-        doc_count = len(sup.documents)
-        has_evidence = len(sup.evidence) > 0
-        suppliers_data.append({
-            "id": sup.id,
-            "name": sup.name,
-            "status": sup.status,
-            "document_count": doc_count,
-            "has_evidence": has_evidence
-        })
-
-    return {
-        "case": case,
-        "suppliers": suppliers_data,
-        "eligibility_ready": True,
-        "ranking_ready": False,
-        "warnings": [],
-        "active_scenario_id": None,
-    }
+    return get_case_analysis_read_model(db, case)

@@ -16,6 +16,26 @@ from pydantic import BaseModel, Field
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# Request Schemas (inputs)
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+class DecisionSummaryCreate(BaseModel):
+    """
+    Payload for POST /cases/{case_id}/decision-summaries.
+
+    Triggers LLM-grounded advisory generation for a specific ranking
+    scenario.  The recommended supplier is computed deterministically
+    from the scenario's rank-1 result — the LLM does not choose it.
+    """
+    scenario_id: str = Field(
+        ...,
+        min_length=1,
+        description="UUID of the ranking scenario to generate a summary for.",
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 # Response Schemas (outputs)
 # ═══════════════════════════════════════════════════════════════════════════
 

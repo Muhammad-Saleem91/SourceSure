@@ -29,6 +29,8 @@ from google import genai
 
 from app.ai.extraction_schema import ExtractionOutput
 from app.ai.prompts import EXTRACTION_SYSTEM_PROMPT_V1, build_field_dictionary
+from app.ai.summary_prompt import SUMMARY_SYSTEM_PROMPT_V1
+from app.ai.summary_schema import SummaryOutput
 from app.core.config import get_settings
 from app.parsers.base import ParsedChunk
 from app.schemas.requirements import RequirementResponse
@@ -156,3 +158,60 @@ class LLMClient:
             raise LLMOutputInvalidError(f"Invalid JSON or schema: {exc}") from exc
 
         return output, PROMPT_VERSION, SCHEMA_VERSION
+
+    # --- Phase 5: Decision Summary Generation --------------------------------
+
+    def generate_summary(self, context_text: str) -> SummaryOutput:
+        """
+        Generate a decision advisory summary using the LLM.
+
+        The LLM receives a pre-built context string containing ONLY stored
+        facts (ranking results, eligibility outcomes, decision-linked
+        evidence).  It must produce a structured JSON response matching
+        ``SummaryOutput`` — it may NOT select a recommended supplier.
+
+        Args:
+            context_text: Pre-built context from ``build_summary_context()``.
+
+        Returns:
+            Validated ``SummaryOutput`` Pydantic instance.
+
+        Raises:
+            LLMUnavailableError: If the API call fails.
+            LLMOutputInvalidError: If the response is empty or invalid.
+        """
+        full_prompt = SUMMARY_SYSTEM_PROMPT_V1.format(context=context_text)
+
+        try:
+            interaction = self.client.interactions.create(
+                model=self.settings.LLM_MODEL,
+                input=full_prompt
+            )
+            raw_text = interaction.output_text
+        except Exception as exc:
+            raise LLMUnavailableError(f"Summary API call failed: {exc}") from exc
+
+        if not raw_text or not raw_text.strip():
+            raise LLMOutputInvalidError("Empty summary response from LLM.")
+
+        # --- Strip markdown fences if the LLM ignored the instruction --------
+        raw_text = raw_text.strip()
+        if raw_text.startswith("```json"):
+            raw_text = raw_text[7:]
+        if raw_text.startswith("```"):
+            raw_text = raw_text[3:]
+        if raw_text.endswith("```"):
+            raw_text = raw_text[:-3]
+        raw_text = raw_text.strip()
+
+        # --- Parse and validate against SummaryOutput schema -----------------
+        try:
+            parsed_json = json.loads(raw_text)
+            output = SummaryOutput.model_validate(parsed_json)
+        except (json.JSONDecodeError, ValidationError) as exc:
+            raise LLMOutputInvalidError(
+                f"Invalid summary JSON or schema: {exc}"
+            ) from exc
+
+        return output
+

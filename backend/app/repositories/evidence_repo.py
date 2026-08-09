@@ -16,9 +16,10 @@ field_key combination.
 import logging
 from typing import List, Optional
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from app.db.models import Evidence
+from app.db.models import Evidence, Supplier
 
 logger = logging.getLogger("sourcesure.repositories.evidence")
 
@@ -134,3 +135,39 @@ def get_for_requirement(
         .order_by(Evidence.created_at)
         .all()
     )
+
+
+# ---------------------------------------------------------------------------
+# Read — evidence counts by requirement (used by Case Analysis Read Model)
+# ---------------------------------------------------------------------------
+
+def get_evidence_counts_by_requirement(
+    db: Session,
+    case_id: str,
+) -> dict[str, int]:
+    """
+    Retrieve the count of evidence records per requirement (field_key)
+    across all suppliers in a specific case.
+
+    Used by the Case Analysis read model to generate warnings when a
+    mandatory requirement has zero evidence across all suppliers.
+
+    Args:
+        db: Active database session.
+        case_id: UUID of the sourcing case.
+
+    Returns:
+        Dict mapping field_key to the count of evidence records.
+    """
+    results = (
+        db.query(
+            Evidence.field_key,
+            func.count(Evidence.id).label("count")
+        )
+        .join(Supplier, Evidence.supplier_id == Supplier.id)
+        .filter(Supplier.case_id == case_id)
+        .group_by(Evidence.field_key)
+        .all()
+    )
+
+    return {row.field_key: row.count for row in results}
