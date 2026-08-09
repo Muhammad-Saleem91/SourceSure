@@ -468,6 +468,10 @@ class RankingScenario(Base):
         "DecisionSummary", back_populates="scenario", cascade="all, delete-orphan"
     )
 
+    @property
+    def results(self):
+        return self.ranking_results
+
 
 # ═══════════════════════════════════════════════════════════════════════════
 # 10. RANKING RESULT — one supplier's score in a scenario
