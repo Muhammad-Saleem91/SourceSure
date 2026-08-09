@@ -49,3 +49,17 @@ def db_session(engine):
         # Rollback the transaction to ensure a clean slate for the next test
         transaction.rollback()
         connection.close()
+
+
+def pytest_terminal_summary(terminalreporter, exitstatus, config):
+    """
+    Custom hook to explicitly print the number of failed tests,
+    even if that number is 0.
+    """
+    passed = len(terminalreporter.stats.get("passed", []))
+    failed = len(terminalreporter.stats.get("failed", []))
+    
+    # We print a bright explicit summary line
+    color = "green" if failed == 0 else "red"
+    terminalreporter.write_line("")
+    terminalreporter.write_sep("=", f"EXPLICIT SUMMARY: {passed} passed, {failed} failed", **{color: True, "bold": True})

@@ -324,6 +324,8 @@ class Evidence(Base):
     sheet_name = sa.Column(sa.String(255), nullable=True)
     cell_range = sa.Column(sa.String(50), nullable=True)
     section = sa.Column(sa.String(255), nullable=True)
+    provenance_method = sa.Column(sa.String(50), nullable=True)
+    validation_reason = sa.Column(sa.String(50), nullable=True)
 
     retrieval_date = sa.Column(sa.Date, nullable=True)
     created_at = _created_at()

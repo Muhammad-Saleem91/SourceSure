@@ -39,7 +39,7 @@ class Settings(BaseSettings):
 
     # --- LLM provider -----------------------------------------------------
     LLM_PROVIDER: str = Field(default="gemini")
-    LLM_MODEL: str = Field(default="gemini-2.5-flash")
+    LLM_MODEL: str = Field(default="gemini-3.6-flash")
     LLM_API_KEY: str = Field(default="", repr=False)  # never log this value
 
     # --- CORS ---------------------------------------------------------------

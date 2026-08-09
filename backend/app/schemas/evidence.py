@@ -45,6 +45,8 @@ class EvidenceResponse(BaseModel):
     sheet_name: Optional[str] = None
     cell_range: Optional[str] = None
     section: Optional[str] = None
+    provenance_method: Optional[str] = None
+    validation_reason: Optional[str] = None
 
     retrieval_date: Optional[date] = None
     created_at: datetime

@@ -139,6 +139,18 @@ def get_latest_for_supplier(
     )
 
 
+def delete_for_supplier(db: Session, supplier_id: str):
+    """Delete all eligibility checks and results for a supplier to cleanly re-evaluate."""
+    db.query(EligibilityCheck).filter(EligibilityCheck.supplier_id == supplier_id).delete(synchronize_session=False)
+    db.query(EligibilityResult).filter(EligibilityResult.supplier_id == supplier_id).delete(synchronize_session=False)
+    db.commit()
+
+
+def get_checks_for_supplier(db: Session, supplier_id: str) -> List[EligibilityCheck]:
+    """Get all eligibility checks for a supplier (useful for testing/debugging)."""
+    return db.query(EligibilityCheck).filter(EligibilityCheck.supplier_id == supplier_id).all()
+
+
 # ---------------------------------------------------------------------------
 # Read — full eligibility matrix for a case
 # ---------------------------------------------------------------------------

@@ -129,7 +129,7 @@ class ReasonCode(str, Enum):
     CONFLICTING_EVIDENCE = "CONFLICTING_EVIDENCE" # multiple conflicting values → REVIEW
     LOW_CONFIDENCE = "LOW_CONFIDENCE"            # confidence < 0.5 → REVIEW
     UNIT_MISMATCH = "UNIT_MISMATCH"              # unit not in conversion allowlist → REVIEW
-    EXPIRED = "EXPIRED"                          # date-type cert past evaluation_date → REVIEW
+    EXPIRED = "EXPIRED"                          # date-type cert past evaluation_date → FAIL
 
 
 # ═══════════════════════════════════════════════════════════════════════════

@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
-from app.schemas.common import CheckStatus, ReasonCode
+from app.schemas.common import CheckStatus, ReasonCode, SupplierStatus
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -76,7 +76,7 @@ class SupplierEligibilitySummary(BaseModel):
     """One row in the eligibility matrix — a supplier's checks and verdict."""
     supplier_id: str
     supplier_name: str
-    overall_status: CheckStatus
+    overall_status: SupplierStatus
     checks: List[EligibilityCheckResponse]
 
 
